@@ -26,16 +26,27 @@ const Main = () => {
   };
 
   const getData = async () => {
-    setLocation("Loading...");
-    setTimezone("Loading...");
-    setIsp("Loading...");
-    const res = await axios.get(
-      `https://geo.ipify.org/api/v1?apiKey=at_MTuJRONmQHDLShMc5M4NJqAktBLB1&ipAddress=${ipAddress}`
-    );
-    setPosition([res.data.location.lat, res.data.location.lng]);
-    setLocation(`${res.data.location.country}`, `${res.data.location.region}`);
-    setTimezone(`GMT(${res.data.location.timezone})`);
-    setIsp(res.data.isp);
+    try {
+      setLocation("Loading...");
+      setTimezone("Loading...");
+      setIsp("Loading...");
+      const res = await axios.get(
+        `https://geo.ipify.org/api/v1?apiKey=at_MTuJRONmQHDLShMc5M4NJqAktBLB1&ipAddress=${ipAddress}`
+      );
+      setPosition([res.data.location.lat, res.data.location.lng]);
+      setLocation(
+        `${res.data.location.country}`,
+        `${res.data.location.region}`
+      );
+      setTimezone(`GMT(${res.data.location.timezone})`);
+      setIsp(res.data.isp);
+    } catch (err) {
+      alert("Not a valid IP address, please try again.");
+      setIpAddress("");
+      setLocation("");
+      setTimezone("");
+      setIsp("");
+    }
   };
 
   useEffect(() => {
