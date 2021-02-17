@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Map, Marker, Popup, TileLayer } from "react-leaflet";
+import { Icon } from "leaflet";
+import icon from "../assets/icon-location.svg";
 import "../styles/Main.css";
+
+require("dotenv").config();
 
 const axios = require("axios");
 
@@ -10,6 +14,11 @@ const Main = () => {
   const [location, setLocation] = useState("");
   const [timezone, setTimezone] = useState("");
   const [isp, setIsp] = useState("");
+
+  const locationIcon = new Icon({
+    iconUrl: icon,
+    iconSize: [30, 40],
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,7 +34,7 @@ const Main = () => {
     );
     setPosition([res.data.location.lat, res.data.location.lng]);
     setLocation(`${res.data.location.country}`, `${res.data.location.region}`);
-    setTimezone(res.data.location.timezone);
+    setTimezone(`GMT(${res.data.location.timezone})`);
     setIsp(res.data.isp);
   };
 
@@ -81,12 +90,12 @@ const Main = () => {
 
       <div className="map__container">
         <div id="map">
-          <Map center={position} zoom={13}>
+          <Map center={position} zoom={14}>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
-            <Marker position={position}>
+            <Marker position={position} icon={locationIcon}>
               <Popup>
                 A pretty CSS3 popup.
                 <br />
