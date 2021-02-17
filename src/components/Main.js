@@ -7,9 +7,9 @@ const axios = require("axios");
 const Main = () => {
   const [position, setPosition] = useState([51.505, -0.09]);
   const [ipAddress, setIpAddress] = useState("");
-  const [location, setLocation] = useState("?");
-  const [timezone, setTimezone] = useState("?");
-  const [isp, setIsp] = useState("?");
+  const [location, setLocation] = useState("");
+  const [timezone, setTimezone] = useState("");
+  const [isp, setIsp] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,6 +17,9 @@ const Main = () => {
   };
 
   const getData = async () => {
+    setLocation("Loading...");
+    setTimezone("Loading...");
+    setIsp("Loading...");
     const res = await axios.get(
       `https://geo.ipify.org/api/v1?apiKey=at_MTuJRONmQHDLShMc5M4NJqAktBLB1&ipAddress=${ipAddress}`
     );
@@ -41,6 +44,7 @@ const Main = () => {
             type="text"
             placeholder="Search for any IP address or domain"
             className="main__input"
+            maxLength="15"
           ></input>
           <button type="submit" class="main__btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="11" height="14">
