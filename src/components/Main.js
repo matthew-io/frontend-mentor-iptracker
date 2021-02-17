@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMapEvents,
-  useMap,
-  useMapEvent,
-} from "react-leaflet";
-import Map from "../components/Map";
+import { Map, Marker, Popup, TileLayer } from "react-leaflet";
 import "../styles/Main.css";
 
 const axios = require("axios");
 
 const Main = () => {
-  const [lat, setLat] = useState(51.505);
-  const [long, setLong] = useState(-0.09);
+  const [position, setPosition] = useState([51.505, -0.09]);
   const [ipAddress, setIpAddress] = useState("");
   const [location, setLocation] = useState("?");
   const [timezone, setTimezone] = useState("?");
@@ -30,12 +20,15 @@ const Main = () => {
     const res = await axios.get(
       `https://geo.ipify.org/api/v1?apiKey=at_MTuJRONmQHDLShMc5M4NJqAktBLB1&ipAddress=${ipAddress}`
     );
-    setLat(res.data.location.lat);
-    setLong(res.data.location.lng);
+    setPosition([res.data.location.lat, res.data.location.lng]);
     setLocation(`${res.data.location.country}`, `${res.data.location.region}`);
     setTimezone(res.data.location.timezone);
     setIsp(res.data.isp);
   };
+
+  useEffect(() => {
+    setPosition(position);
+  }, [getData]);
 
   return (
     <div className="container">
@@ -81,22 +74,23 @@ const Main = () => {
           </div>
         </div>
       </div>
+
       <div className="map__container">
-        <MapContainer
-          center={[`${lat}`, `${long}`]}
-          zoom={15}
-          scrollWheelZoom={true}
-        >
-          <TileLayer
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <Marker position={[`${lat}`, `${long}`]}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </Marker>
-        </MapContainer>
+        <div id="map">
+          <Map center={position} zoom={13}>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <Marker position={position}>
+              <Popup>
+                A pretty CSS3 popup.
+                <br />
+                Easily customizable.
+              </Popup>
+            </Marker>
+          </Map>
+        </div>
       </div>
     </div>
   );

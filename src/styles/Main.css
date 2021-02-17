@@ -80,7 +80,12 @@
   flex-direction: column;
 }
 
-.info__heading {
+.info__value {
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  width: 300px;
 }
 
 .info__grid {
